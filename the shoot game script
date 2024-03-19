@@ -1,0 +1,66 @@
+-- Initialize variables
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local gun = script.Parent
+local bullet = gun.Bullet
+local enemies = game.Workspace.Enemies:GetChildren()
+
+-- Configure gun properties
+local fireRate = 0.2  -- Time between shots in seconds
+local damage = 10
+
+local canShoot = true
+
+-- Function to create a bullet and handle shooting
+local function shoot()
+    if not canShoot then
+        return
+    end
+
+    canShoot = false
+    
+    local bulletClone = bullet:Clone()
+    bulletClone.Parent = game.Workspace
+    bulletClone.Position = gun.Handle.Position + gun.Handle.CFrame.lookVector * 2
+    
+    bulletClone.Velocity = gun.Handle.CFrame.lookVector * 300  -- Adjust bullet speed
+    
+    wait(fireRate)
+    canShoot = true
+end
+
+-- Handle shooting when the mouse button is pressed
+mouse.Button1Down:Connect(function()
+    shoot()
+end)
+
+-- Function to handle enemy damage
+local function hitEnemy(enemy)
+    enemy.Health = enemy.Health - damage
+    if enemy.Health <= 0 then
+        enemy:Destroy()
+    end
+end
+
+-- Check for bullet collisions with enemies
+bullet.Touched:Connect(function(hit)
+    local enemy = hit.Parent
+    if enemy:IsA("Model") and enemy:FindFirstChild("Health") then
+        hitEnemy(enemy)
+        bullet:Destroy()
+    end
+end)
+
+-- Enemy AI
+for _, enemy in pairs(enemies) do
+    enemy.Touched:Connect(function(hit)
+        local character = hit.Parent
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid and canShoot then
+            canShoot = false
+            humanoid.Health = humanoid.Health - damage
+            wait(fireRate)
+            canShoot = true
+        end
+    end)
+end
