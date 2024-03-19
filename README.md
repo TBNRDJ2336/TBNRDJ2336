@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @TBNRDJ2336
-- 👀 I’m interested in gameing,singing,coding
+- 👀 I’m interested in gameing,singing,coding for game scirpts
 - 🌱 I’m currently learning computer science 
 - 📫 How to reach me i am qatar reach out to me on instagram 
 - 😄 Pronouns: he/him
